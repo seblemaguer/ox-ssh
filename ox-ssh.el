@@ -154,6 +154,11 @@
   :type 'text
   :group 'org-export-ssh)
 
+(defcustom org-ssh-global-identifier "Global"
+  "Host identifier for global configuration. It will be replaced by the character \"*\"."
+  :type 'text
+  :group 'org-export-ssh)
+
 (defun org-ssh--user-config ()
   "Return the location of the user's SSH config."
   (expand-file-name (concat (file-name-as-directory ".ssh")
@@ -179,7 +184,7 @@
          (ip (org-element-property :IP headline))
          (host (org-element-property :raw-value headline))
          (addr (or ip hostname)))
-    (if addr
+    (if (or addr (string= host org-ssh-global-identifier))
         (let ((ssh-add-keys-to-agent (org-element-property :SSH_ADD_KEYS_TO_AGENT headline))
               (ssh-address-family (org-element-property :SSH_ADDRESS_FAMILY headline))
               (ssh-batch-mode (org-element-property :SSH_BATCH_MODE headline))
@@ -269,8 +274,11 @@
               (ssh-visual-host-key (org-element-property :SSH_VISUAL_HOST_KEY headline))
               (ssh-x-auth-location (org-element-property :SSH_X_AUTH_LOCATION headline)))
 
-          (concat "\nHost " host "\n"
-                  "  HostName " addr "\n"
+          (concat (if (string= host org-ssh-global-identifier)
+                      (concat "\nHost " "*" "\n")
+                    (concat "\nHost " host "\n"))
+                  (when addr
+                    (concat "  HostName " addr "\n"))
                   (when ssh-add-keys-to-agent
                     (concat "  AddKeysToAgent " ssh-add-keys-to-agent "\n"))
                   (when ssh-address-family
