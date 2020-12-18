@@ -40,13 +40,16 @@
 ;;   beginning of the export. This can be used for comments or rules
 ;;   that apply to all hosts.
 ;;
+;; - `org-ssh-global-identifier' the identifier used to identify the global configuration.
+;;
 ;; Usage
 ;; Export headings with specific properties as entries in an SSH
 ;; configuration file. These properties correspond with the client
 ;; configuration options for SSH.
 ;;
-;; For a heading to be exported as a host, it must have either a
-;; HOSTNAME or IP property. If an entry has both, IP takes
+;; For a heading to be exported as a host, it must have either
+;; its heading equal to the global identifier defined by `org-ssh-global-identifier',
+;; a HOSTNAME or IP property. If an entry has both, IP takes
 ;; precedence. It can also contain one or more
 ;; optional parameters, listed in the table below.
 ;;
